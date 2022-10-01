@@ -6,6 +6,7 @@ import {
   AxesHelper,
 } from 'three';
 
+import { Lantern } from './Lantern';
 
 export class SceneManager {
   constructor() {
@@ -19,12 +20,15 @@ export class SceneManager {
     this.scene.add(ax)
 
     this.camera = new PerspectiveCamera(75, this.canvas.width / this.canvas.height, 0.1, 1000);
-    this.camera.position.z = 100;
+    this.camera.position.z = 12;
 
     this.renderer = new WebGLRenderer({canvas:this.canvas, antialias:true});
     this.renderer.setSize(this.canvas.width, this.canvas.height);
 
     const controls = new OrbitControls(this.camera, this.renderer.domElement);
+
+    const lantern = new Lantern();
+    this.scene.add(lantern.mesh);
   }
 
   update() {
