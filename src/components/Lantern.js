@@ -11,12 +11,18 @@ import {
 } from 'three';
 
 import paper from '../assets/paper.jpg';
+
 import lanternVertexShader from '../shaders/lantern/vertex.glsl';
 import lanternFragmentShader from '../shaders/lantern/fragment.glsl';
 
 
 export class Lantern {
-  constructor() {
+  constructor(velocity, x, y, z) {
+    this.velocity = velocity;
+    this.x = x;
+    this.y = y;
+    this.z = z;
+
     this.radTop = 4;
     this.radBtm = 1.7,
     this.height = 8;
@@ -27,6 +33,8 @@ export class Lantern {
     this.red = new Color(0xB30303);
     this.orange = new Color(0xE8AE00);
 
+    this.loader = new TextureLoader();
+
     this.mesh = new Group();
 
     this.init();
@@ -35,6 +43,7 @@ export class Lantern {
   init() {
     this.body = this.createBody();
     this.top = this.createTop();
+    this.mesh.position.set(this.x, this.y, this.z);
 
     this.mesh.add(this.body)
     this.mesh.add(this.top);
@@ -43,7 +52,7 @@ export class Lantern {
   createTop() {
     const geometry = new CircleGeometry(this.radTop, this.radSegments);
     const material = new MeshBasicMaterial({
-      map: new TextureLoader().load(paper),
+      map: this.loader.load(paper),
       side: DoubleSide,
       color: this.red
     });
@@ -62,7 +71,7 @@ export class Lantern {
       uniforms: {
         colour1: { value: this.orange },
         colour2: { value: this.red },
-        paperTexture: { value:new TextureLoader().load(paper)}
+        paperTexture: { value:this.loader.load(paper)}
       },
       transparent: true,
       side: DoubleSide
@@ -71,7 +80,10 @@ export class Lantern {
     return new Mesh(geometry, material);
   }
 
-  update() {
-    
+  update(timeElapsed) {
+    if (timeElapsed) {
+      this.y += this.velocity * timeElapsed;
+      this.mesh.position.setY(this.y);
+    }
   }
 }

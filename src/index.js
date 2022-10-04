@@ -9,9 +9,9 @@ function init() {
   animate();
 }
 
-function animate() {
+function animate(t) {
   requestAnimationFrame(animate);
-  sceneManager.update();
+  sceneManager.update(t/10000);
 }
 
 init();
